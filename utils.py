@@ -38,3 +38,17 @@ def loadFASTA(file_location):
     datalist = [list(x) for x in zip(id,description,clean_sequences)]
     dataframe = pd.DataFrame(datalist, columns = ['ID' , 'Description', 'Sequence'])
     return dataframe
+
+
+def strip_ambiguous_nucleotides(seq):
+    """
+    Remove ambiguous nucleotides (https://reverse-complement.com/ambiguity.html)
+    - as per Kameris method
+    """
+    clean_seq = re.sub(r'[URYSWKMBVDHN]', '', seq)
+    junk = re.findall(r"[^ACGT]+", clean_seq)
+    if junk:
+        warnings.warn("Unknown characters found: %s"%str(junk))
+        clean_seq = re.sub(r"[^ACGT]+", "", clean_seq)
+    return clean_seq
+   
